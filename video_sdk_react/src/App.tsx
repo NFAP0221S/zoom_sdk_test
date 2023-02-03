@@ -9,6 +9,7 @@ import Video from './feature/video/video';
 import VideoSingle from './feature/video/video-single';
 import VideoNonSAB from './feature/video/video-non-sab';
 import Preview from './feature/preview/preview';
+import Test from './feature/_test/test';
 import ZoomContext from './context/zoom-context';
 import ZoomMediaContext from './context/media-context';
 import ChatContext from './context/chat-context';
@@ -102,8 +103,13 @@ declare global {
 
 function App(props: AppProps) {
   const {
-    meetingArgs: { sdkKey, topic, signature, name, password, webEndpoint: webEndpointArg, enforceGalleryView }
+    // meetingArgs: { sdkKey, topic, signature, name, password, webEndpoint: webEndpointArg, enforceGalleryView }
+    meetingArgs: { sdkKey, signature, password, webEndpoint: webEndpointArg, enforceGalleryView }
   } = props;
+  // test topic, name
+  const [topic, setTopic] = useState('');
+  const [name, setName] = useState('');
+  // test end
   const [loading, setIsLoading] = useState(true);
   const [loadingText, setLoadingText] = useState('');
   const [isFailover, setIsFailover] = useState<boolean>(false);
@@ -116,6 +122,12 @@ function App(props: AppProps) {
   const [subsessionClient, setSubsessionClient] = useState<SubsessionClient | null>(null);
   const [liveTranscriptionClient, setLiveTranscriptionClient] = useState<LiveTranscriptionClient | null>(null);
   const [isSupportGalleryView, setIsSupportGalleryView] = useState<boolean>(true);
+
+  useEffect(() => {
+    console.log('topic:', topic);
+    console.log('name:', name);
+  }, [topic, name]);
+
   const zmClient = useContext(ZoomContext);
   let webEndpoint: any;
   if (webEndpointArg) {
@@ -126,6 +138,8 @@ function App(props: AppProps) {
   const mediaContext = useMemo(() => ({ ...mediaState, mediaStream }), [mediaState, mediaStream]);
   const galleryViewWithoutSAB = Number(enforceGalleryView) === 1 && !window.crossOriginIsolated;
   useEffect(() => {
+    console.log('status', status);
+
     const init = async () => {
       await zmClient.init('ko-KR', `${window.location.origin}/lib`, {
         webEndpoint,
@@ -134,6 +148,7 @@ function App(props: AppProps) {
       });
       try {
         setLoadingText('Joining the session...');
+        // test join session
         await zmClient.join(topic, signature, name, password).catch((e) => {
           console.log(e);
         });
@@ -160,7 +175,7 @@ function App(props: AppProps) {
     return () => {
       ZoomVideo.destroyClient();
     };
-  }, [sdkKey, signature, zmClient, topic, name, password, webEndpoint, galleryViewWithoutSAB]);
+  }, [sdkKey, signature, zmClient, topic, name, password, webEndpoint, galleryViewWithoutSAB, loadingText, status]);
   const onConnectionChange = useCallback(
     (payload) => {
       if (payload.state === ConnectionState.Reconnecting) {
@@ -213,6 +228,7 @@ function App(props: AppProps) {
   const onLeaveOrJoinSession = useCallback(async () => {
     if (status === 'closed') {
       setIsLoading(true);
+
       await zmClient.join(topic, signature, name, password);
       setIsLoading(false);
     } else if (status === 'connected') {
@@ -220,6 +236,14 @@ function App(props: AppProps) {
       message.warn('You have left the session.');
     }
   }, [zmClient, status, topic, signature, name, password]);
+  // test effect
+  useEffect(() => {
+    if (status === 'closed') {
+      setTopic('');
+      setName('');
+    }
+  }, [status]);
+
   useEffect(() => {
     zmClient.on('connection-change', onConnectionChange);
     zmClient.on('media-sdk-change', onMediaSDKChange);
@@ -247,7 +271,13 @@ function App(props: AppProps) {
                         <Route
                           path="/"
                           render={(props) => (
-                            <Home {...props} status={status} onLeaveOrJoinSession={onLeaveOrJoinSession} />
+                            <Home
+                              {...props}
+                              status={status}
+                              onLeaveOrJoinSession={onLeaveOrJoinSession}
+                              setTopic={setTopic}
+                              setName={setName}
+                            />
                           )}
                           exact
                         />
@@ -260,6 +290,7 @@ function App(props: AppProps) {
                         />
                         <Route path="/subsession" component={Subsession} />
                         <Route path="/preview" component={Preview} />
+                        <Route path="/test" component={Test} />
                       </Switch>
                     </Router>
                   </LiveTranscriptionContext.Provider>

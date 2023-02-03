@@ -4,14 +4,17 @@ import { RouteComponentProps } from 'react-router-dom';
 import { Card, Button } from 'antd';
 import { IconFont } from '../../component/icon-font';
 import './home.scss';
+import InputForm from './join/InputForm';
 
 const { Meta } = Card;
 interface HomeProps extends RouteComponentProps {
   status: string;
   onLeaveOrJoinSession: () => void;
+  setTopic: React.Dispatch<React.SetStateAction<string>>;
+  setName: React.Dispatch<React.SetStateAction<string>>;
 }
 const Home: React.FunctionComponent<HomeProps> = (props) => {
-  const { history, status, onLeaveOrJoinSession } = props;
+  const { history, status, onLeaveOrJoinSession, setTopic, setName } = props;
   const onCardClick = (type: string) => {
     history.push(`/${type}${location.search}`);
   };
@@ -47,7 +50,7 @@ const Home: React.FunctionComponent<HomeProps> = (props) => {
       description: 'Audio and Video preview'
     },
     {
-      key: 'test-test',
+      key: 'test',
       icon: '',
       title: '테스트',
       description: '...'
@@ -80,6 +83,11 @@ const Home: React.FunctionComponent<HomeProps> = (props) => {
             {actionText}
           </Button>
         )}
+        <div>
+          {actionText === 'Join' && (
+            <InputForm setTopic={setTopic} setName={setName} onLeaveOrJoinSession={onLeaveOrJoinSession} />
+          )}
+        </div>
       </div>
 
       <div className="home">

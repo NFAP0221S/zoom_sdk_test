@@ -32,7 +32,6 @@ import { TranscriptionSubtitle } from './transcription-subtitle';
 import { current } from 'immer';
 import IsoRecordingModal from './recording-ask-modal';
 import { KeyOutlined } from '@ant-design/icons';
-// import { LiveTranscriptionLanguage } from '@zoom/videosdk';
 
 interface VideoFooterProps {
   className?: string;
