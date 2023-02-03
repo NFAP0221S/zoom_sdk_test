@@ -10,11 +10,15 @@ const { Meta } = Card;
 interface HomeProps extends RouteComponentProps {
   status: string;
   onLeaveOrJoinSession: () => void;
-  setTopic: React.Dispatch<React.SetStateAction<string>>;
-  setName: React.Dispatch<React.SetStateAction<string>>;
+  setStatus: React.Dispatch<React.SetStateAction<string>>;
+  setTopicValue: React.Dispatch<React.SetStateAction<string>>;
+  setNameValue: React.Dispatch<React.SetStateAction<string>>;
+  topicValue: string;
+  nameValue: string;
 }
 const Home: React.FunctionComponent<HomeProps> = (props) => {
-  const { history, status, onLeaveOrJoinSession, setTopic, setName } = props;
+  const { history, status, onLeaveOrJoinSession, setStatus, setTopicValue, setNameValue, topicValue, nameValue } =
+    props;
   const onCardClick = (type: string) => {
     history.push(`/${type}${location.search}`);
   };
@@ -85,13 +89,21 @@ const Home: React.FunctionComponent<HomeProps> = (props) => {
         )}
         <div>
           {actionText === 'Join' && (
-            <InputForm setTopic={setTopic} setName={setName} onLeaveOrJoinSession={onLeaveOrJoinSession} />
+            <InputForm
+              setStatus={setStatus}
+              onLeaveOrJoinSession={onLeaveOrJoinSession}
+              status={status}
+              setTopicValue={setTopicValue}
+              setNameValue={setNameValue}
+              topicValue={topicValue}
+              nameValue={nameValue}
+            />
           )}
         </div>
       </div>
 
       <div className="home">
-        <h1>Zoom Video SDK feature</h1>
+        <h1>My test app</h1>
         <div className="feature-entry">
           {featureList.map((feature) => {
             const { key, icon, title, description } = feature;

@@ -1,5 +1,5 @@
 /* eslint-disable no-restricted-globals */
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import ZoomVideo from '@zoom/videosdk';
 import './index.css';
@@ -65,7 +65,7 @@ if (meetingArgs.web) {
 }
 
 if (!meetingArgs?.cloud_recording_option) {
-  meetingArgs.cloud_recording_option = "0";
+  meetingArgs.cloud_recording_option = '0';
 }
 if (!meetingArgs?.cloud_recording_election) {
   meetingArgs.cloud_recording_election = '';
@@ -101,6 +101,7 @@ if (!meetingArgs.signature && meetingArgs.sdkSecret && meetingArgs.topic) {
   console.log(window.location.origin + '/?' + new URLSearchParams(urlArgs).toString());
 }
 const zmClient = ZoomVideo.createClient();
+
 ReactDOM.render(
   <React.StrictMode>
     <ZoomContext.Provider value={zmClient}>

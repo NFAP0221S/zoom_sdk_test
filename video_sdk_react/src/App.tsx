@@ -103,12 +103,12 @@ declare global {
 
 function App(props: AppProps) {
   const {
-    // meetingArgs: { sdkKey, topic, signature, name, password, webEndpoint: webEndpointArg, enforceGalleryView }
-    meetingArgs: { sdkKey, signature, password, webEndpoint: webEndpointArg, enforceGalleryView }
+    meetingArgs: { sdkKey, topic, signature, name, password, webEndpoint: webEndpointArg, enforceGalleryView }
+    // meetingArgs: { sdkKey, signature, password, webEndpoint: webEndpointArg, enforceGalleryView }
   } = props;
   // test topic, name
-  const [topic, setTopic] = useState('');
-  const [name, setName] = useState('');
+  const [topicValue, setTopicValue] = useState('');
+  const [nameValue, setNameValue] = useState('');
   // test end
   const [loading, setIsLoading] = useState(true);
   const [loadingText, setLoadingText] = useState('');
@@ -124,9 +124,12 @@ function App(props: AppProps) {
   const [isSupportGalleryView, setIsSupportGalleryView] = useState<boolean>(true);
 
   useEffect(() => {
-    console.log('topic:', topic);
-    console.log('name:', name);
-  }, [topic, name]);
+    console.log('topic:', topicValue);
+    console.log('name:', nameValue);
+  }, [topicValue, nameValue]);
+  useEffect(() => {
+    console.log('status', status);
+  }, [status]);
 
   const zmClient = useContext(ZoomContext);
   let webEndpoint: any;
@@ -138,8 +141,6 @@ function App(props: AppProps) {
   const mediaContext = useMemo(() => ({ ...mediaState, mediaStream }), [mediaState, mediaStream]);
   const galleryViewWithoutSAB = Number(enforceGalleryView) === 1 && !window.crossOriginIsolated;
   useEffect(() => {
-    console.log('status', status);
-
     const init = async () => {
       await zmClient.init('ko-KR', `${window.location.origin}/lib`, {
         webEndpoint,
@@ -149,7 +150,9 @@ function App(props: AppProps) {
       try {
         setLoadingText('Joining the session...');
         // test join session
-        await zmClient.join(topic, signature, name, password).catch((e) => {
+        console.log('test test ', topicValue, nameValue);
+        // await zmClient.join(topic, signature, name, password).catch((e) => {
+        await zmClient.join(topicValue, signature, nameValue, password).catch((e) => {
           console.log(e);
         });
         const stream = zmClient.getMediaStream();
@@ -175,9 +178,23 @@ function App(props: AppProps) {
     return () => {
       ZoomVideo.destroyClient();
     };
-  }, [sdkKey, signature, zmClient, topic, name, password, webEndpoint, galleryViewWithoutSAB, loadingText, status]);
+  }, [
+    sdkKey,
+    signature,
+    zmClient,
+    // topic,
+    // name,
+    password,
+    webEndpoint,
+    galleryViewWithoutSAB,
+    loadingText,
+    status,
+    topicValue,
+    nameValue
+  ]);
   const onConnectionChange = useCallback(
     (payload) => {
+      console.log('payload:', payload);
       if (payload.state === ConnectionState.Reconnecting) {
         setIsLoading(true);
         setIsFailover(true);
@@ -225,24 +242,35 @@ function App(props: AppProps) {
     console.log('onAudioMerged', payload);
   }, []);
 
-  const onLeaveOrJoinSession = useCallback(async () => {
-    if (status === 'closed') {
-      setIsLoading(true);
+  // useEffect(() => {
+  //   if (status === 'closed') {
+  //     setTopicValue('');
+  //     setNameValue('');
+  //   }
+  // }, [status]);
 
-      await zmClient.join(topic, signature, name, password);
+  const onLeaveOrJoinSession = useCallback(async () => {
+    console.log('test test22222 ', topicValue, nameValue);
+
+    if (status === 'closed') {
+      console.log('test test3333 ', topicValue, nameValue);
+
+      console.log('status는 closed');
+      setIsLoading(true);
+      await zmClient.join(topicValue, signature, nameValue, password);
       setIsLoading(false);
     } else if (status === 'connected') {
+      console.log('test test 4444 ', topicValue, nameValue);
+
+      setStatus('closed');
+      console.log('status는 connected');
+      setTopicValue('');
+      setNameValue('');
       await zmClient.leave();
+      console.log('You have left the session.');
       message.warn('You have left the session.');
     }
-  }, [zmClient, status, topic, signature, name, password]);
-  // test effect
-  useEffect(() => {
-    if (status === 'closed') {
-      setTopic('');
-      setName('');
-    }
-  }, [status]);
+  }, [status, zmClient, topicValue, signature, nameValue, password]);
 
   useEffect(() => {
     zmClient.on('connection-change', onConnectionChange);
@@ -275,8 +303,11 @@ function App(props: AppProps) {
                               {...props}
                               status={status}
                               onLeaveOrJoinSession={onLeaveOrJoinSession}
-                              setTopic={setTopic}
-                              setName={setName}
+                              setStatus={setStatus}
+                              setTopicValue={setTopicValue}
+                              setNameValue={setNameValue}
+                              topicValue={topicValue}
+                              nameValue={nameValue}
                             />
                           )}
                           exact
