@@ -32,7 +32,6 @@ import './App.css';
 import SubsessionContext from './context/subsession-context';
 import { isAndroidBrowser } from './utils/platform';
 import { generateVideoToken } from './utils/util';
-import { useStore } from './store/store';
 interface AppProps {
   meetingArgs: {
     sdkKey: string;
@@ -126,7 +125,7 @@ function App(props: AppProps) {
   } = props;
 
   // test end
-  const { isTopic, isName, isPassword, isRole } = useStore();
+  // const { isTopic, isName, isPassword, isRole } = useStore();
 
   const [loading, setIsLoading] = useState(false);
   const [loadingText, setLoadingText] = useState('');

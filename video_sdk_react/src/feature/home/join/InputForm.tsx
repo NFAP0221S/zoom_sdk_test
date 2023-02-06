@@ -44,7 +44,7 @@ const InputForm: React.FunctionComponent<InputFormProps> = (props) => {
     }
     toggleHandler(!isToggle);
     // onLeaveOrJoinSession(isTopic, isName, isPassword, isRole);
-  }, [actionText, isToggle, nameChange, passwordChange, roleChange, toggleHandler, topicChange]);
+  }, [actionText, nameChange, passwordChange, roleChange, toggleHandler, topicChange]);
 
   useEffect(() => {
     if (isToggle) {
