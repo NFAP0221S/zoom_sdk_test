@@ -1,5 +1,5 @@
 /* eslint-disable no-restricted-globals */
-import React from 'react';
+import React, { MouseEventHandler } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { Card, Button } from 'antd';
 import { IconFont } from '../../component/icon-font';
@@ -9,16 +9,10 @@ import InputForm from './join/InputForm';
 const { Meta } = Card;
 interface HomeProps extends RouteComponentProps {
   status: string;
-  onLeaveOrJoinSession: () => void;
-  setStatus: React.Dispatch<React.SetStateAction<string>>;
-  setTopicValue: React.Dispatch<React.SetStateAction<string>>;
-  setNameValue: React.Dispatch<React.SetStateAction<string>>;
-  topicValue: string;
-  nameValue: string;
+  onLeaveOrJoinSession: (topic: string, name: string, password: string, role: string) => void;
 }
 const Home: React.FunctionComponent<HomeProps> = (props) => {
-  const { history, status, onLeaveOrJoinSession, setStatus, setTopicValue, setNameValue, topicValue, nameValue } =
-    props;
+  const { history, status, onLeaveOrJoinSession } = props;
   const onCardClick = (type: string) => {
     history.push(`/${type}${location.search}`);
   };
@@ -82,24 +76,12 @@ const Home: React.FunctionComponent<HomeProps> = (props) => {
             <span>Doc</span>
           </a>
         </div>
-        {actionText && (
+        {/* {actionText && (
           <Button type="link" className="navleave" onClick={onLeaveOrJoinSession}>
             {actionText}
           </Button>
-        )}
-        <div>
-          {actionText === 'Join' && (
-            <InputForm
-              setStatus={setStatus}
-              onLeaveOrJoinSession={onLeaveOrJoinSession}
-              status={status}
-              setTopicValue={setTopicValue}
-              setNameValue={setNameValue}
-              topicValue={topicValue}
-              nameValue={nameValue}
-            />
-          )}
-        </div>
+        )} */}
+        <div>{actionText && <InputForm onLeaveOrJoinSession={onLeaveOrJoinSession} status={status} />}</div>
       </div>
 
       <div className="home">

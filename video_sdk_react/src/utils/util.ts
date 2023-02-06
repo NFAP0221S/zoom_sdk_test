@@ -4,7 +4,7 @@ import { KJUR } from 'jsrsasign';
 export function generateVideoToken(
   sdkKey: string,
   sdkSecret: string,
-  topic: string,
+  topic: string | null,
   passWord = '',
   sessionKey = '',
   userIdentity = '',

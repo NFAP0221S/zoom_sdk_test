@@ -1,5 +1,4 @@
-/* eslint-disable no-restricted-globals */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import ZoomVideo from '@zoom/videosdk';
 import './index.css';
@@ -9,10 +8,14 @@ import ZoomContext from './context/zoom-context';
 import { devConfig } from './config/dev';
 import { b64DecodeUnicode, generateVideoToken } from './utils/util';
 
+import { useStore } from './store/store';
+
 let meetingArgs: any = Object.fromEntries(new URLSearchParams(location.search));
 // Add enforceGalleryView to turn on the gallery view without SharedAddayBuffer
 if (!meetingArgs.sdkKey || !meetingArgs.topic || !meetingArgs.name || !meetingArgs.signature) {
   meetingArgs = { ...devConfig, ...meetingArgs };
+  // meetingArgs = { ...meetingArgs, ...devConfig };
+  console.log('meetingArgs', meetingArgs);
   meetingArgs.enforceGalleryView = true;
 }
 

@@ -31,15 +31,21 @@ import {
 import './App.css';
 import SubsessionContext from './context/subsession-context';
 import { isAndroidBrowser } from './utils/platform';
+import { generateVideoToken } from './utils/util';
+import { useStore } from './store/store';
 interface AppProps {
   meetingArgs: {
     sdkKey: string;
+    sdkSecret: string;
     topic: string;
     signature: string;
     name: string;
     password?: string;
     webEndpoint?: string;
     enforceGalleryView?: string;
+    userIdentity: string;
+    sessionKey: string;
+    role: string;
   };
 }
 const mediaShape = {
@@ -102,15 +108,27 @@ declare global {
 }
 
 function App(props: AppProps) {
+  console.log('window.location.origin', window.location.origin);
   const {
-    meetingArgs: { sdkKey, topic, signature, name, password, webEndpoint: webEndpointArg, enforceGalleryView }
+    meetingArgs: {
+      topic,
+      name,
+      sdkKey,
+      sdkSecret,
+      signature,
+      password,
+      userIdentity,
+      sessionKey,
+      webEndpoint: webEndpointArg,
+      enforceGalleryView
+    }
     // meetingArgs: { sdkKey, signature, password, webEndpoint: webEndpointArg, enforceGalleryView }
   } = props;
-  // test topic, name
-  const [topicValue, setTopicValue] = useState('');
-  const [nameValue, setNameValue] = useState('');
+
   // test end
-  const [loading, setIsLoading] = useState(true);
+  const { isTopic, isName, isPassword, isRole } = useStore();
+
+  const [loading, setIsLoading] = useState(false);
   const [loadingText, setLoadingText] = useState('');
   const [isFailover, setIsFailover] = useState<boolean>(false);
   const [status, setStatus] = useState<string>('closed');
@@ -122,14 +140,6 @@ function App(props: AppProps) {
   const [subsessionClient, setSubsessionClient] = useState<SubsessionClient | null>(null);
   const [liveTranscriptionClient, setLiveTranscriptionClient] = useState<LiveTranscriptionClient | null>(null);
   const [isSupportGalleryView, setIsSupportGalleryView] = useState<boolean>(true);
-
-  useEffect(() => {
-    console.log('topic:', topicValue);
-    console.log('name:', nameValue);
-  }, [topicValue, nameValue]);
-  useEffect(() => {
-    console.log('status', status);
-  }, [status]);
 
   const zmClient = useContext(ZoomContext);
   let webEndpoint: any;
@@ -147,51 +157,38 @@ function App(props: AppProps) {
         enforceMultipleVideos: galleryViewWithoutSAB,
         stayAwake: true
       });
-      try {
-        setLoadingText('Joining the session...');
-        // test join session
-        console.log('test test ', topicValue, nameValue);
-        // await zmClient.join(topic, signature, name, password).catch((e) => {
-        await zmClient.join(topicValue, signature, nameValue, password).catch((e) => {
-          console.log(e);
-        });
-        const stream = zmClient.getMediaStream();
-        setMediaStream(stream);
-        setIsSupportGalleryView(stream.isSupportMultipleVideos() && !isAndroidBrowser());
-        const chatClient = zmClient.getChatClient();
-        const commandClient = zmClient.getCommandClient();
-        const recordingClient = zmClient.getRecordingClient();
-        const ssClient = zmClient.getSubsessionClient();
-        const ltClient = zmClient.getLiveTranscriptionClient();
-        setChatClient(chatClient);
-        setCommandClient(commandClient);
-        setRecordingClient(recordingClient);
-        setSubsessionClient(ssClient);
-        setLiveTranscriptionClient(ltClient);
-        setIsLoading(false);
-      } catch (e: any) {
-        setIsLoading(false);
-        message.error(e.reason);
-      }
+      // try {
+      //   setLoadingText('Joining the session...');
+      //   // test join session
+      //   // await zmClient.join(topic, signature, name, password).catch((e) => {
+      //   await zmClient.join(topic, signature, name, password).catch((e) => {
+      //     console.log(e);
+      //   });
+
+      //   const stream = zmClient.getMediaStream();
+      //   setMediaStream(stream);
+      //   setIsSupportGalleryView(stream.isSupportMultipleVideos() && !isAndroidBrowser());
+      //   const chatClient = zmClient.getChatClient();
+      //   const commandClient = zmClient.getCommandClient();
+      //   const recordingClient = zmClient.getRecordingClient();
+      //   const ssClient = zmClient.getSubsessionClient();
+      //   const ltClient = zmClient.getLiveTranscriptionClient();
+      //   setChatClient(chatClient);
+      //   setCommandClient(commandClient);
+      //   setRecordingClient(recordingClient);
+      //   setSubsessionClient(ssClient);
+      //   setLiveTranscriptionClient(ltClient);
+      //   setIsLoading(false);
+      // } catch (e: any) {
+      //   setIsLoading(false);
+      //   message.error(e.reason);
+      // }
     };
     init();
     return () => {
       ZoomVideo.destroyClient();
     };
-  }, [
-    sdkKey,
-    signature,
-    zmClient,
-    // topic,
-    // name,
-    password,
-    webEndpoint,
-    galleryViewWithoutSAB,
-    loadingText,
-    status,
-    topicValue,
-    nameValue
-  ]);
+  }, [sdkKey, signature, zmClient, topic, name, password, webEndpoint, galleryViewWithoutSAB]);
   const onConnectionChange = useCallback(
     (payload) => {
       console.log('payload:', payload);
@@ -242,35 +239,54 @@ function App(props: AppProps) {
     console.log('onAudioMerged', payload);
   }, []);
 
-  // useEffect(() => {
-  //   if (status === 'closed') {
-  //     setTopicValue('');
-  //     setNameValue('');
-  //   }
-  // }, [status]);
-
-  const onLeaveOrJoinSession = useCallback(async () => {
-    console.log('test test22222 ', topicValue, nameValue);
-
-    if (status === 'closed') {
-      console.log('test test3333 ', topicValue, nameValue);
-
-      console.log('status는 closed');
-      setIsLoading(true);
-      await zmClient.join(topicValue, signature, nameValue, password);
-      setIsLoading(false);
-    } else if (status === 'connected') {
-      console.log('test test 4444 ', topicValue, nameValue);
-
-      setStatus('closed');
-      console.log('status는 connected');
-      setTopicValue('');
-      setNameValue('');
-      await zmClient.leave();
-      console.log('You have left the session.');
-      message.warn('You have left the session.');
-    }
-  }, [status, zmClient, topicValue, signature, nameValue, password]);
+  const onLeaveOrJoinSession = useCallback(
+    async (isTopic: string, isName: string, isPassword: string, isRole: string) => {
+      console.log('내 토픽', isTopic);
+      console.log('내 네임', isName);
+      console.log('내 비번', isPassword);
+      console.log('내 롤', isRole);
+      if (status === 'closed') {
+        try {
+          const newSigature = generateVideoToken(
+            sdkKey,
+            sdkSecret,
+            isTopic,
+            isPassword,
+            userIdentity,
+            sessionKey,
+            parseInt(isRole, 10)
+          );
+          setLoadingText('Joining the session...');
+          setIsLoading(true);
+          await zmClient.join(isTopic, newSigature, isName, isPassword);
+          setIsLoading(false);
+          const stream = zmClient.getMediaStream();
+          setMediaStream(stream);
+          setIsSupportGalleryView(stream.isSupportMultipleVideos() && !isAndroidBrowser());
+          const chatClient = zmClient.getChatClient();
+          const commandClient = zmClient.getCommandClient();
+          const recordingClient = zmClient.getRecordingClient();
+          const ssClient = zmClient.getSubsessionClient();
+          const ltClient = zmClient.getLiveTranscriptionClient();
+          setChatClient(chatClient);
+          setCommandClient(commandClient);
+          setRecordingClient(recordingClient);
+          setSubsessionClient(ssClient);
+          setLiveTranscriptionClient(ltClient);
+          setIsLoading(false);
+        } catch (e: any) {
+          setIsLoading(false);
+          message.error(e.reason);
+        }
+      } else if (status === 'connected') {
+        setStatus('closed');
+        await zmClient.leave();
+        console.log('You have left the session.');
+        message.warn('You have left the session.');
+      }
+    },
+    [sdkKey, sdkSecret, sessionKey, status, userIdentity, zmClient]
+  );
 
   useEffect(() => {
     zmClient.on('connection-change', onConnectionChange);
@@ -299,16 +315,7 @@ function App(props: AppProps) {
                         <Route
                           path="/"
                           render={(props) => (
-                            <Home
-                              {...props}
-                              status={status}
-                              onLeaveOrJoinSession={onLeaveOrJoinSession}
-                              setStatus={setStatus}
-                              setTopicValue={setTopicValue}
-                              setNameValue={setNameValue}
-                              topicValue={topicValue}
-                              nameValue={nameValue}
-                            />
+                            <Home {...props} status={status} onLeaveOrJoinSession={onLeaveOrJoinSession} />
                           )}
                           exact
                         />
