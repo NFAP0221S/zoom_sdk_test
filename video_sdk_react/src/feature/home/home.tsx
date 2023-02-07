@@ -4,7 +4,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { Card, Button } from 'antd';
 import { IconFont } from '../../component/icon-font';
 import './home.scss';
-import InputForm from './join/InputForm';
+import InputForm from './join/joinInputForm';
 
 const { Meta } = Card;
 interface HomeProps extends RouteComponentProps {
@@ -76,12 +76,9 @@ const Home: React.FunctionComponent<HomeProps> = (props) => {
             <span>Doc</span>
           </a>
         </div>
-        {/* {actionText && (
-          <Button type="link" className="navleave" onClick={onLeaveOrJoinSession}>
-            {actionText}
-          </Button>
-        )} */}
-        <div>{actionText && <InputForm onLeaveOrJoinSession={onLeaveOrJoinSession} status={status} />}</div>
+        <div className="navinput-container">
+          {actionText && <InputForm onLeaveOrJoinSession={onLeaveOrJoinSession} status={status} />}
+        </div>
       </div>
 
       <div className="home">

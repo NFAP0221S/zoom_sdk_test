@@ -188,6 +188,7 @@ function App(props: AppProps) {
       ZoomVideo.destroyClient();
     };
   }, [sdkKey, signature, zmClient, topic, name, password, webEndpoint, galleryViewWithoutSAB]);
+  // test 확인
   const onConnectionChange = useCallback(
     (payload) => {
       console.log('payload:', payload);
@@ -204,6 +205,7 @@ function App(props: AppProps) {
           setLoadingText('Returning to Main Session...');
         }
       } else if (payload.state === ConnectionState.Connected) {
+        console.log('onConnectionChange: Connected');
         setStatus('connected');
         if (isFailover) {
           setIsLoading(false);
@@ -245,6 +247,7 @@ function App(props: AppProps) {
       console.log('내 비번', isPassword);
       console.log('내 롤', isRole);
       if (status === 'closed') {
+        console.log('onLeaveOrJoinSession: status === closed');
         try {
           const newSigature = generateVideoToken(
             sdkKey,
@@ -278,6 +281,7 @@ function App(props: AppProps) {
           message.error(e.reason);
         }
       } else if (status === 'connected') {
+        console.log('onLeaveOrJoinSession: status === connected');
         setStatus('closed');
         await zmClient.leave();
         console.log('You have left the session.');

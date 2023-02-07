@@ -6,7 +6,7 @@ interface InputFormProps {
   status: string;
 }
 
-const InputForm: React.FunctionComponent<InputFormProps> = (props) => {
+const JoinInputForm: React.FunctionComponent<InputFormProps> = (props) => {
   const { onLeaveOrJoinSession, status } = props;
   const {
     isTopic,
@@ -33,7 +33,7 @@ const InputForm: React.FunctionComponent<InputFormProps> = (props) => {
   const passwordRef = useRef<HTMLInputElement>(null);
   const roleRef = useRef<HTMLInputElement>(null);
 
-  const buttonHandler = useCallback(() => {
+  const buttonHandler = () => {
     if (actionText === 'Join') {
       if (topicRef.current && nameRef.current && passwordRef.current && roleRef.current) {
         topicChange(topicRef.current.value);
@@ -44,25 +44,31 @@ const InputForm: React.FunctionComponent<InputFormProps> = (props) => {
     }
     toggleHandler(!isToggle);
     // onLeaveOrJoinSession(isTopic, isName, isPassword, isRole);
-  }, [actionText, nameChange, passwordChange, roleChange, toggleHandler, topicChange]);
+  };
 
   useEffect(() => {
+    // console.log('useEffect toggle', isToggle);
     if (isToggle) {
       onLeaveOrJoinSession(isTopic, isName, isPassword, isRole);
+      // Toggle값을 false로 안돌려주면 강제로 세션Leave 시킴
+      toggleHandler(!isToggle);
     }
-  }, [isToggle]);
+  }, [isToggle]); // 의존성 배열 isToggle만 고정
 
   return (
-    <div>
-      {actionText === 'Join' && <input ref={topicRef} type="text" placeholder="topic 입력" />}
-      {actionText === 'Join' && <input ref={nameRef} type="text" placeholder="name 입력" />}
-      {actionText === 'Join' && <input ref={passwordRef} type="password" placeholder="password 입력" />}
-      {actionText === 'Join' && <input ref={roleRef} type="text" placeholder="role 입력" />}
-      {actionText === 'Leave' && <div>topic:{isTopic}</div>}
-      {actionText === 'Leave' && <div>name:{isName}</div>}
-      {actionText === 'Leave' && <div>password:{isPassword}</div>}
-      {actionText === 'Leave' && <div>role:{isRole}</div>}
-      {/* <button onClick={buttonHandler}>클릭</button> */}
+    <div className="navinput">
+      <ul className="navinput-join">
+        <li>{actionText === 'Join' && <input ref={topicRef} type="text" placeholder="topic 입력" />}</li>
+        <li>{actionText === 'Join' && <input ref={nameRef} type="text" placeholder="name 입력" />}</li>
+        <li>{actionText === 'Join' && <input ref={passwordRef} type="password" placeholder="password 입력" />}</li>
+        <li>{actionText === 'Join' && <input ref={roleRef} type="text" placeholder="role 입력" />}</li>
+      </ul>
+      <ul className="navinput-leave">
+        <li>{actionText === 'Leave' && <div>topic:{isTopic}</div>}</li>
+        <li>{actionText === 'Leave' && <div>name:{isName}</div>}</li>
+        <li>{actionText === 'Leave' && <div>password:{isPassword}</div>}</li>
+        <li>{actionText === 'Leave' && <div>role:{isRole}</div>}</li>
+      </ul>
       {actionText === 'Join' && (
         <Button type="link" className="navleave" onClick={buttonHandler}>
           {actionText}
@@ -77,4 +83,4 @@ const InputForm: React.FunctionComponent<InputFormProps> = (props) => {
   );
 };
 
-export default InputForm;
+export default JoinInputForm;
