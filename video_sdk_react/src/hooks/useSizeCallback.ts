@@ -12,7 +12,7 @@ export declare class ResizeObserver {
 
 export function useSizeCallback(
   target: HTMLElement | null,
-  callback: (payload: { width: number; height: number }) => void,
+  callback: (payload: { width: number; height: number }) => void
 ) {
   useLayoutEffect(() => {
     if (!target) {
@@ -24,7 +24,7 @@ export function useSizeCallback(
       entries.forEach((entry) => {
         callback({
           width: entry.target.clientWidth,
-          height: entry.target.clientHeight,
+          height: entry.target.clientHeight
         });
       });
     });

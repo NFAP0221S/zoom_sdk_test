@@ -40,9 +40,19 @@ const VideoContainer: React.FunctionComponent<RouteComponentProps> = (props) => 
     width: 0,
     height: 0
   });
+  // 현재 화면 w, h
   const canvasDimension = useCanvasDimension(mediaStream, videoRef);
   const activeVideo = useActiveVideo(zmClient);
   const { page, pageSize, totalPage, totalSize, setPage } = usePagination(zmClient, canvasDimension);
+  // test useEfect
+  useEffect(() => {
+    if (page && pageSize && totalPage && totalSize) {
+      console.log('page', page);
+      console.log('pageSize', pageSize);
+      console.log('totalPage', totalPage);
+      console.log('totalSize', totalSize);
+    }
+  }, [page, pageSize, totalPage, totalSize]);
   const { visibleParticipants, layout: videoLayout } = useGalleryLayout(
     zmClient,
     mediaStream,
@@ -56,6 +66,12 @@ const VideoContainer: React.FunctionComponent<RouteComponentProps> = (props) => 
       totalSize
     }
   );
+  useEffect(() => {
+    if (canvasDimension) console.log('canvasDimension:', canvasDimension);
+  }, [canvasDimension]);
+  useEffect(() => {
+    if (videoLayout) console.log('videoLayout:', videoLayout);
+  }, [videoLayout]);
   const { isRecieveSharing, isStartedShare, sharedContentDimension } = useShare(zmClient, mediaStream, shareRef);
 
   const { userVolumeList, setLocalVolume } = useLocalVolume();
@@ -92,6 +108,10 @@ const VideoContainer: React.FunctionComponent<RouteComponentProps> = (props) => 
       });
     }
   }, [isSharing, sharedContentDimension, containerDimension]);
+  // test
+  useEffect(() => {
+    console.log('visibleParticipants', visibleParticipants);
+  }, [visibleParticipants]);
 
   const onShareContainerResize = useCallback(({ width, height }) => {
     _.throttle(() => {
@@ -163,6 +183,7 @@ const VideoContainer: React.FunctionComponent<RouteComponentProps> = (props) => 
             if (index > videoLayout.length - 1) {
               return null;
             }
+            // const dimension = videoLayout[index];
             const dimension = videoLayout[index];
             const { width, height, x, y } = dimension;
             const { height: canvasHeight } = canvasDimension;

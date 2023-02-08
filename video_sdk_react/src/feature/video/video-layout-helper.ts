@@ -11,10 +11,10 @@ interface Layout {
   column: number;
   row: number;
 }
-const layoutCandidates: { [key: number]: Grid[] } = Array.from({ length: 9 })
+const layoutCandidates: { [key: number]: Grid[] } = Array.from({ length: 25 })
   .map((value, index) => {
     const count = index + 1;
-    const mid = Math.ceil(count / 2);
+    const mid = Math.ceil(count / 2); // 올림
     const candidates = Array.from({ length: mid })
       .map((v, i) => {
         const row = i + 1;
@@ -47,16 +47,26 @@ const layoutCandidates: { [key: number]: Grid[] } = Array.from({ length: 9 })
   .reduce((prev, curr) => ({ ...prev, [curr.count]: curr.candidates }), {});
 
 const aspectRatio = 16 / 9;
+// const aspectRatio = 5 / 3; // 1.33, 1.77, 2.33
 const minCellWidth = 256;
-const minCellHeight = minCellWidth / aspectRatio;
+// const minCellWidth = 512;
+const minCellHeight = minCellWidth / aspectRatio; // 256 /
 const cellOffset = 5;
-const maxCount = 9;
+// const maxCount = 9;
+const maxCount = 25;
+// width 는 최소 2610 나와야됨
 const maxRowsColumns = (width: number, height: number) => ({
   maxColumns: Math.max(1, Math.floor(width / (minCellWidth + cellOffset * 2))),
   maxRows: Math.max(1, Math.floor(height / (minCellHeight + cellOffset * 2)))
+  // maxColumns: 5,
+  // maxRows: 5
 });
 export function maxViewportVideoCounts(width: number, height: number) {
+  console.log('floor', Math.floor(width / (minCellWidth + cellOffset * 2)));
+  console.log('xxx', minCellWidth + cellOffset * 2);
+
   const { maxRows, maxColumns } = maxRowsColumns(width, height);
+  console.log('maxViewportVideoCounts', maxRows, maxColumns);
   return maxRows * maxColumns;
 }
 
@@ -68,12 +78,16 @@ export function getVideoLayout(rootWidth: number, rootHeight: number, count: num
     return [];
   }
   let { maxRows, maxColumns } = maxRowsColumns(rootWidth, rootHeight);
+  console.log('getVideoLayout maxRowsColumns', maxRows, maxColumns);
   maxRows = Math.min(maxRows, count);
   maxColumns = Math.min(maxColumns, count);
+  console.log('max row, col:', maxRows, maxColumns);
   const actualCount = Math.min(count, maxRows * maxColumns);
   const layoutOfCount = layoutCandidates[actualCount].filter(
     (item) => item.row <= maxRows && item.column <= maxColumns
   );
+  console.log('actualCount', actualCount);
+  console.log('layoutOfCount', layoutOfCount);
   const preferredLayout: Layout = layoutOfCount
     .map((item) => {
       const { column, row } = item;

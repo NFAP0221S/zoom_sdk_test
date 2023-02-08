@@ -57,12 +57,10 @@ const JoinInputForm: React.FunctionComponent<InputFormProps> = (props) => {
 
   return (
     <div className="navinput">
-      <ul className="navinput-join">
-        <li>{actionText === 'Join' && <input ref={topicRef} type="text" placeholder="topic 입력" />}</li>
-        <li>{actionText === 'Join' && <input ref={nameRef} type="text" placeholder="name 입력" />}</li>
-        <li>{actionText === 'Join' && <input ref={passwordRef} type="password" placeholder="password 입력" />}</li>
-        <li>{actionText === 'Join' && <input ref={roleRef} type="text" placeholder="role 입력" />}</li>
-      </ul>
+      {actionText === 'Join' && <input ref={topicRef} type="text" placeholder="topic 입력" />}
+      {actionText === 'Join' && <input ref={nameRef} type="text" placeholder="name 입력" />}
+      {actionText === 'Join' && <input ref={passwordRef} type="password" placeholder="password 입력" />}
+      {actionText === 'Join' && <input ref={roleRef} type="text" placeholder="role 입력" />}
       <ul className="navinput-leave">
         <li>{actionText === 'Leave' && <div>topic:{isTopic}</div>}</li>
         <li>{actionText === 'Leave' && <div>name:{isName}</div>}</li>

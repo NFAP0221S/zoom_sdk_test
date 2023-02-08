@@ -24,18 +24,13 @@
 }
 
 .navinput-containe {
-  // flex-grow: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-grow: 1;
 
   .navinput {
-    display: flex;
-    // flex-direction: column;
+    .navinput-join {
+    }
 
     .navinput-leave {
-      display: flex;
-      text-align: start;
     }
   }
 }

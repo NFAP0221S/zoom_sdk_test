@@ -3,17 +3,15 @@ import { maxViewportVideoCounts } from '../video-layout-helper';
 import { useMount } from '../../../hooks';
 import { Dimension } from '../video-types';
 import { ZoomClient } from '../../../index-types';
-const MAX_NUMBER_PER_PAGE = 9;
-// eslint-disable-next-line import/prefer-default-export
+const MAX_NUMBER_PER_PAGE = 25;
 export function usePagination(zmClient: ZoomClient, dimension: Dimension) {
   const [page, setPage] = useState(0);
   const [totalSize, setTotalSize] = useState(0);
   const [pageSize, setPageSize] = useState(MAX_NUMBER_PER_PAGE);
   useEffect(() => {
-    const size = Math.min(
-      MAX_NUMBER_PER_PAGE,
-      maxViewportVideoCounts(dimension.width, dimension.height),
-    );
+    console.log('dimension.width', dimension.width);
+    console.log('dimension.height', dimension.height);
+    const size = Math.min(MAX_NUMBER_PER_PAGE, maxViewportVideoCounts(dimension.width, dimension.height));
     setPageSize(size);
   }, [dimension]);
   const onParticipantsChange = useCallback(() => {
@@ -32,11 +30,16 @@ export function usePagination(zmClient: ZoomClient, dimension: Dimension) {
   useMount(() => {
     setTotalSize(zmClient.getAllUser().length);
   });
+
+  // test
+  useEffect(() => {
+    console.log('usePagination page', page);
+  }, [page]);
   return {
     page,
     totalPage: Math.ceil(totalSize / pageSize),
     pageSize,
     totalSize,
-    setPage,
+    setPage
   };
 }

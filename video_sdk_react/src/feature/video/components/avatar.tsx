@@ -82,7 +82,7 @@ const Avatar = (props: AvatarProps) => {
         </div>
       )}
       {!bVideoOn && <p className="center-name">{displayName}</p>}
-      <div className="avatar-menu">x</div>
+      {/* <div className="avatar-menu">x</div> */}
       {menu.length > 0 && (
         <Dropdown
           menu={getAntdDropdownMenu(menu, onMenuItemClick)}

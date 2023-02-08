@@ -29,6 +29,9 @@ export function useGalleryLayout(
   useEffect(() => {
     setLayout(getVideoLayout(dimension.width, dimension.height, size));
   }, [dimension, size]);
+  useEffect(() => {
+    if (layout) console.log('useGalleryLayout layout', layout);
+  }, [layout]);
 
   const onParticipantsChange = useCallback(
     (participants: Participant[]) => {
@@ -44,6 +47,7 @@ export function useGalleryLayout(
           pageParticipants.splice(1, 0, currentUser);
           pageParticipants = pageParticipants.filter((_user, index) => Math.floor(index / pageSize) === page);
         }
+        console.log('onParticipantsChange pageParticipants', pageParticipants);
         setVisibleParticipants(pageParticipants);
         const videoParticipants = pageParticipants.filter((user) => user.bVideoOn).map((user) => user.userId);
         setSubscribedVideos(videoParticipants);

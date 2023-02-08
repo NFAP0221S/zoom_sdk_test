@@ -44,7 +44,7 @@
     "no-unused-vars": 0,
     "no-unreachable": 2,
     "no-duplicate-imports": 2,
-    "max-params":["error", 8],
+    "max-params": ["error", 8],
     "react/display-name": 0,
     "react-hooks/rules-of-hooks": 2,
     "react-hooks/exhaustive-deps": 1,
