@@ -5,17 +5,15 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import ZoomContext from './context/zoom-context';
-import { d1, d2, d3, d4, d5, d6, d7, d8, d9, d10 } from './config/dev';
+import { devConfig } from './config/dev';
 import { b64DecodeUnicode, generateVideoToken } from './utils/util';
-
-const arr = [d1, d2, d3, d4, d5, d6, d7, d8, d9, d10];
 
 let meetingArgs: any = Object.fromEntries(new URLSearchParams(location.search));
 // for (let i = 1; i === 10; i++) {
 // Add enforceGalleryView to turn on the gallery view without SharedAddayBuffer
 if (!meetingArgs.sdkKey || !meetingArgs.topic || !meetingArgs.name || !meetingArgs.signature) {
   // meetingArgs = { ...arr[i], ...meetingArgs };
-  meetingArgs = { ...meetingArgs, ...d1 };
+  meetingArgs = { ...meetingArgs, ...devConfig };
   console.log('meetingArgs', meetingArgs);
   meetingArgs.enforceGalleryView = true;
 }

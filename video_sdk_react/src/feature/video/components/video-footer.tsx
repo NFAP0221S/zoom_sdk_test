@@ -63,7 +63,7 @@ const VideoFooter = (props: VideoFooterProps) => {
   const [selecetedStatisticTab, setSelectedStatisticTab] = useState('audio');
   const [isComputerAudioDisabled, setIsComputerAudioDisabled] = useState(false);
   const [sharePrivilege, setSharePrivileg] = useState(SharePrivilege.Unlocked);
-  const [caption, setCaption] = useState({ userId: '', text: '하이', isOver: false }); // test
+  const [caption, setCaption] = useState({ userId: '', text: '', isOver: false }); // test
 
   const { mediaStream } = useContext(ZoomMediaContext);
   const liveTranscriptionClient = useContext(LiveTranscriptionContext);

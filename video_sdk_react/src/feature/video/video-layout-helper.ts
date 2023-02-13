@@ -12,15 +12,6 @@ interface Layout {
   row: number;
 }
 
-// const colrow = [
-//   { column: 5, row: 1 },
-//   { column: 5, row: 1 },
-//   { column: 5, row: 1 },
-//   { column: 5, row: 1 },
-//   { column: 5, row: 1 },
-//   { column: 5, row: 2 }
-// ];
-
 const layoutCandidates: { [key: number]: Grid[] } = Array.from({ length: 25 })
   .map((value, index) => {
     const count = index + 1;
@@ -63,19 +54,17 @@ const layoutCandidates: { [key: number]: Grid[] } = Array.from({ length: 25 })
  * 8명 230 , 125
  */
 const aspectRatio = 16 / 9;
-// const aspectRatio = 5 / 3; // 1.33, 1.77, 2.33
 const minCellWidth = 256;
-// const minCellWidth = 512;
 const minCellHeight = minCellWidth / aspectRatio; // 256 /
 const cellOffset = 5;
-// const maxCount = 9;
 const maxCount = 25;
-// width 는 최소 2610 나와야됨
+let testNum = 0;
 const maxRowsColumns = (width: number, height: number) => ({
   // maxColumns: Math.max(1, Math.floor(width / (minCellWidth + cellOffset * 2))),
   // maxRows: Math.max(1, Math.floor(height / (minCellHeight + cellOffset * 2)))
-  maxColumns: 5,
-  maxRows: 5
+  maxColumns: 6,
+  maxRows: 1
+  // maxRows: testNum < 5 ? 1 : 2
 });
 export function maxViewportVideoCounts(width: number, height: number) {
   console.log('floor', Math.floor(width / (minCellWidth + cellOffset * 2)));
@@ -94,7 +83,7 @@ export function getVideoLayout(rootWidth: number, rootHeight: number, count: num
     return [];
   }
   let { maxRows, maxColumns } = maxRowsColumns(rootWidth, rootHeight);
-  console.log('getVideoLayout maxRowsColumns', maxRows, maxColumns);
+  console.log('getVideoLayout_maxRowsColumns', maxRows, maxColumns);
   maxRows = Math.min(maxRows, count);
   maxColumns = Math.min(maxColumns, count);
   console.log('max row, col:', maxRows, maxColumns);
@@ -110,7 +99,10 @@ export function getVideoLayout(rootWidth: number, rootHeight: number, count: num
       // const { column, row } = colrow[index];
       console.log('item col', column);
       console.log('item row', row);
-      const canonical = Math.floor(Math.min(rootWidth / (16 * column), rootHeight / (9 * row)));
+      // const canonical = Math.floor(Math.min(rootWidth / (16 * column), rootHeight / (9 * row)));
+      // cell size setup
+      const canonical = 12;
+      console.log('canonical', canonical);
       const cellWidth = canonical * 16 - cellOffset * 2;
       const cellHeight = canonical * 9 - cellOffset * 2;
       return {
@@ -136,10 +128,17 @@ export function getVideoLayout(rootWidth: number, rootHeight: number, count: num
   console.log('preferredLayout', preferredLayout);
   // const cellBoxWidth = 230 + cellOffset * 2;
   // const cellBoxHeight = 125 + cellOffset * 2;
+  // const mainCellBoxWidth = cellWidth * 3 + cellOffset * 2;
+  // const mainCellBoxHeight = cellHeight * 3 + cellOffset * 2;
   const cellBoxWidth = cellWidth + cellOffset * 2;
   const cellBoxHeight = cellHeight + cellOffset * 2;
+  // 수평
   const horizontalMargin = (rootWidth - cellBoxWidth * column) / 2 + cellOffset;
-  const verticalMargin = (rootHeight - cellBoxHeight * row) / 2 + cellOffset;
+  // 수직
+  // const verticalMargin = (rootHeight - cellBoxHeight * row) / 2 + cellOffset; // origin
+  const verticalMargin = (rootHeight - cellBoxHeight * row) / 1 + cellOffset;
+  console.log('verticalMargin vM', rootHeight, ' - ', cellBoxHeight, 'x', row, ' = ', verticalMargin);
+
   const cellDimensions = [];
   const lastRowColumns = column - ((column * row) % actualCount);
   const lastRowMargin = (rootWidth - cellBoxWidth * lastRowColumns) / 2 + cellOffset;
@@ -159,43 +158,93 @@ export function getVideoLayout(rootWidth: number, rootHeight: number, count: num
   } else if (actualCount > 4 && cellHeight >= 180) {
     quality = VideoQuality.Video_180P;
   }
-  // for (let i = 0; i < row; i++) {
-  //   for (let j = 0; j < column; j++) {
-  //     const leftMargin = i !== row - 1 ? horizontalMargin : lastRowMargin;
-  //     // const leftMargin = 5;
-  //     console.log('leftMargin', leftMargin);
-  //     if (i * column + j < actualCount) {
-  //       cellDimensions.push({
-  //         width: cellWidth,
-  //         height: cellHeight,
-  //         x: Math.floor(leftMargin + j * cellBoxWidth),
-  //         y: Math.floor(verticalMargin + (row - i - 1) * cellBoxHeight),
-  //         quality
-  //       });
-  //     }
-  //     console.log('cellDimensions', cellDimensions);
-  //   }
+  let fiveX = 0;
+  // let twoY = 0;
+  // let subRow = 0;
+  // if (row === 2) {
+  //   subRow += 1;
   // }
+  // let rowPlus = row + subRow;
+  // console.log('rowPlus', rowPlus);
+  // 수동으로 한다면, 여기서 for문 제어해서 좌표값 조정 가능할 것 같음
   for (let i = 0; i < row; i++) {
-    for (let j = 0; j < column; j++) {
-      const leftMargin = i !== row - 1 ? horizontalMargin : lastRowMargin;
+    let col = 0;
+    if (i > 0) {
+      col = 4;
+    }
+    // column 으로 넣으면 자동 격자로 맞춰줌, maxColumns로 넣으면 열 고정
+    for (let j = 0; j < maxColumns - col; j++) {
+      console.log('forcol', maxColumns);
+      // const leftMargin = i !== row - 1 ? horizontalMargin : lastRowMargin;
+      const leftMargin = 10;
       // const leftMargin = 5;
-      console.log('leftMargin', leftMargin);
-      if (i * column + j < actualCount) {
-        let ynum = j <= 4 ? Math.floor(verticalMargin + (row - i - 1) * cellBoxHeight) : 700;
+      if (i > 1) {
+        i += 1;
+      }
 
+      console.log('leftMargin', leftMargin);
+      const index = i * column + j;
+      if (index === 0) {
+        cellDimensions.push({
+          x: (rootWidth - cellBoxWidth * 3) / 2,
+          y: (rootHeight - cellBoxHeight * 3) / 2,
+          width: cellWidth * 3,
+          height: cellHeight * 3,
+          quality
+        });
+        // } else if (i * column + j < actualCount) {
+      } else if (index < actualCount) {
+        // let y_axis = j <= 4 ? Math.floor(verticalMargin + (row - i - 1) * cellBoxHeight) : 700;
+        // let y_axis = 5 * (j + 1);
+        // console.log('y_axis', y_axis);
+        // console.log('top', top[j]);
+        console.log('iii', i);
+        console.log('jjj', j);
+        console.log('rrr', row);
+        console.log('fiveX', fiveX);
         cellDimensions.push({
           // width: 230,
           // height: 125,
           width: cellWidth,
           height: cellHeight,
-          x: Math.floor(leftMargin + j * cellBoxWidth),
-          y: Math.floor(verticalMargin + (row - i - 1) * cellBoxHeight),
+          x: Math.floor(j <= 5 ? leftMargin + (j - 1) * cellBoxWidth : leftMargin + 5 * cellBoxWidth),
+          // x: Math.floor(cellDimensions.length < 5 ? leftMargin + (j - 1) * cellBoxWidth : fiveX),
+          y: Math.floor(
+            // i <= 1 ? verticalMargin + (row - i - 1) * cellBoxHeight : verticalMargin + (j - i - 1) * cellBoxHeight
+            verticalMargin + (row - i - 1) * cellBoxHeight
+          ),
+          // x: leftArr[j],
+          // y: top[j],
+          // y: y_axis,
           quality
         });
+        testNum = cellDimensions.length;
+        console.log('testNum', testNum);
       }
+      // fivX 변수명은 임시, 지정한 컬럼 위치에서 y축 내림
+      if (cellDimensions.length === maxColumns) {
+        fiveX = Math.floor(leftMargin + j * cellBoxWidth);
+      }
+      // if (cellDimensions.length >= maxColumns) {
+      //   twoY = verticalMargin + (1 - i - 1) * cellBoxHeight * 2;
+      //   // twoY = (1 - i - 1) * cellBoxHeight * 2;
+      // }
       console.log('cellDimensions', cellDimensions);
     }
   }
+  // test
+  // for (let i = 0; i < 9; i++) {
+  //   console.log('top', top[i]);
+
+  //   cellDimensions.push({
+  //     width: 230,
+  //     height: 125,
+  //     x: leftArr[i],
+  //     y: top[i],
+  //     quality
+  //   });
+  //   console.log('cellDimensions', cellDimensions);
+  // }
+
   return cellDimensions;
 }
