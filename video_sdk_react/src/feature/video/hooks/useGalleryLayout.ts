@@ -38,6 +38,7 @@ export function useGalleryLayout(
       const currentUser = zmClient.getCurrentUserInfo();
       if (currentUser && participants.length > 0) {
         let pageParticipants: Participant[] = [];
+        pageParticipants = participants;
         if (participants.length === 1) {
           pageParticipants = participants;
         } else {
