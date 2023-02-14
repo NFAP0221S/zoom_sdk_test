@@ -1,9 +1,12 @@
 import { useCallback, useEffect, useState, MutableRefObject } from 'react';
-import { getVideoLayout } from '../video-layout-helper';
+import { getVideoLayout_2 } from '../video-layout-helper-2';
+import { getVideoLayout_1 } from '../video-layout-helper-1';
+import { getVideoLayout_0 } from '../video-layout-helper-0';
 import { useRenderVideo } from './useRenderVideo';
 import { Dimension, Pagination, CellLayout } from '../video-types';
 import { ZoomClient, MediaStream, Participant } from '../../../index-types';
 import { useParticipantsChange } from './useParticipantsChange';
+import { useStore } from '../../../store/store';
 /**
  * Default order of video:
  *  1. video's participants first
@@ -25,10 +28,19 @@ export function useGalleryLayout(
   if (page === totalPage - 1) {
     size = Math.min(size, totalSize % pageSize || size);
   }
-
+  const { videoLayoutBtn } = useStore();
   useEffect(() => {
-    setLayout(getVideoLayout(dimension.width, dimension.height, size));
-  }, [dimension, size]);
+    if (videoLayoutBtn === 0) {
+      setLayout(getVideoLayout_0(dimension.width, dimension.height, size));
+    }
+    if (videoLayoutBtn === 1) {
+      setLayout(getVideoLayout_1(dimension.width, dimension.height, size));
+    }
+    if (videoLayoutBtn === 2) {
+      setLayout(getVideoLayout_2(dimension.width, dimension.height, size));
+    }
+  }, [dimension, size, videoLayoutBtn]);
+
   useEffect(() => {
     if (layout) console.log('useGalleryLayout layout', layout);
   }, [layout]);
@@ -45,7 +57,8 @@ export function useGalleryLayout(
           pageParticipants = participants
             .filter((user) => user.userId !== currentUser.userId)
             .sort((user1, user2) => Number(user2.bVideoOn) - Number(user1.bVideoOn));
-          pageParticipants.splice(1, 0, currentUser);
+          // pageParticipants.splice(1, 0, currentUser);
+          pageParticipants.splice(0, 0, currentUser);
           pageParticipants = pageParticipants.filter((_user, index) => Math.floor(index / pageSize) === page);
         }
         console.log('onParticipantsChange pageParticipants', pageParticipants);

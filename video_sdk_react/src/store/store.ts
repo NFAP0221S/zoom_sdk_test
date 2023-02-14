@@ -15,6 +15,9 @@ interface Store {
 
   isToggle: boolean;
   toggleHandler: (isToggle: boolean) => void;
+
+  videoLayoutBtn: number;
+  videoLayoutBtnHandler: () => void;
 }
 
 export const useStore = create<Store>((set) => ({
@@ -32,5 +35,9 @@ export const useStore = create<Store>((set) => ({
   roleChange: (role) => set(() => ({ isRole: role })),
 
   isToggle: false,
-  toggleHandler: () => set((state) => ({ isToggle: !state.isToggle }))
+  toggleHandler: () => set((state) => ({ isToggle: !state.isToggle })),
+
+  videoLayoutBtn: 0,
+  videoLayoutBtnHandler: () =>
+    set((state) => ({ videoLayoutBtn: state.videoLayoutBtn !== 2 ? state.videoLayoutBtn + 1 : 0 }))
 }));

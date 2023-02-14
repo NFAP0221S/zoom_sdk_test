@@ -21,8 +21,20 @@ import { useAdvancedFeatureSwitch } from './hooks/useAdvancedFeatureSwith';
 import RemoteControlPanel, { RemoteControlIndication } from './components/remote-control';
 import { useCameraControl } from './hooks/useCameraControl';
 import { useNetworkQuality } from './hooks/useNetworkQuality';
+import { useStore } from '../../store/store';
 
 const VideoContainer: React.FunctionComponent<RouteComponentProps> = (props) => {
+  // test
+  const { videoLayoutBtn, videoLayoutBtnHandler } = useStore();
+
+  const btnClickHandler = () => {
+    videoLayoutBtnHandler();
+  };
+  useEffect(() => {
+    console.log('videoLayoutBtn:', videoLayoutBtn);
+  }, [videoLayoutBtn]);
+  // test end
+
   const zmClient = useContext(ZoomContext);
   const {
     mediaStream,
@@ -139,8 +151,16 @@ const VideoContainer: React.FunctionComponent<RouteComponentProps> = (props) => 
     },
     [toggleAdjustVolume, giveUpControl, mediaStream, isControllingFarEnd]
   );
+
   return (
     <div className="viewport">
+      <div className="viewport-header">
+        <button className="header-btn" onClick={btnClickHandler}>
+          {videoLayoutBtn === 0 && '격자'}
+          {videoLayoutBtn === 1 && '일자'}
+          {videoLayoutBtn === 2 && 'ㄱ자'}
+        </button>
+      </div>
       <div
         className={classnames('share-container', {
           'in-sharing': isSharing

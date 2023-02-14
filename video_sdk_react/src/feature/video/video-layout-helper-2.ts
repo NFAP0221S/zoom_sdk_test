@@ -75,7 +75,7 @@ export function maxViewportVideoCounts(width: number, height: number) {
   return maxRows * maxColumns;
 }
 
-export function getVideoLayout(rootWidth: number, rootHeight: number, count: number): CellLayout[] {
+export function getVideoLayout_2(rootWidth: number, rootHeight: number, count: number): CellLayout[] {
   /**
    * [1,count]
    */

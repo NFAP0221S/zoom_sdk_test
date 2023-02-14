@@ -1,12 +1,17 @@
 import { useState, useCallback, useEffect } from 'react';
-import { maxViewportVideoCounts } from '../video-layout-helper';
+import { maxViewportVideoCounts } from '../video-layout-helper-2';
 import { useMount } from '../../../hooks';
 import { Dimension } from '../video-types';
 import { ZoomClient } from '../../../index-types';
-const MAX_NUMBER_PER_PAGE = 25;
+import { useStore } from '../../../store/store';
+let MAX_NUMBER_PER_PAGE = 25;
 export function usePagination(zmClient: ZoomClient, dimension: Dimension) {
+  const { videoLayoutBtn } = useStore();
   const [page, setPage] = useState(0);
   const [totalSize, setTotalSize] = useState(0);
+  if (videoLayoutBtn === 1) {
+    MAX_NUMBER_PER_PAGE = 6;
+  }
   const [pageSize, setPageSize] = useState(MAX_NUMBER_PER_PAGE);
   useEffect(() => {
     console.log('dimension.width', dimension.width);
