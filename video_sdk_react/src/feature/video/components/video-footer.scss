@@ -11,13 +11,12 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-right:min(30px,1vw);
+  margin-right: min(30px, 1vw);
   width: 60px !important;
   height: 60px !important;
-  > *{
+  > * {
     font-size: 28px !important;
   }
- 
 }
 .vc-dropdown-button {
   border-radius: 20px;
@@ -25,7 +24,7 @@
   width: 70px;
   display: flex;
   justify-content: center;
-  margin-right:min(30px,1vw);
+  margin-right: min(30px, 1vw);
   > .ant-btn {
     font-size: 30px;
     color: #fff;
@@ -39,7 +38,7 @@
       color: #40a9ff;
     }
   }
-  > .ant-btn[disabled]{
+  > .ant-btn[disabled] {
     background: transparent;
     color: #999;
   }

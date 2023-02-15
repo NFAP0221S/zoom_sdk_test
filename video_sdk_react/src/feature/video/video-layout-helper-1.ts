@@ -12,7 +12,7 @@ interface Layout {
   row: number;
 }
 
-const layoutCandidates: { [key: number]: Grid[] } = Array.from({ length: 25 })
+const layoutCandidates: { [key: number]: Grid[] } = Array.from({ length: 6 })
   .map((value, index) => {
     const count = index + 1;
     const mid = Math.ceil(count / 2);
@@ -62,7 +62,7 @@ let testNum = 0;
 const maxRowsColumns = (width: number, height: number) => ({
   // maxColumns: Math.max(1, Math.floor(width / (minCellWidth + cellOffset * 2))),
   // maxRows: Math.max(1, Math.floor(height / (minCellHeight + cellOffset * 2)))
-  maxColumns: 11,
+  maxColumns: 6,
   maxRows: 1
   // maxRows: testNum < 5 ? 1 : 2
 });
@@ -192,7 +192,7 @@ export function getVideoLayout_1(rootWidth: number, rootHeight: number, count: n
           // y: (rootHeight - cellBoxHeight * 3) / 2,
           y: 60,
           // width: cellWidth * 3,
-          width: rootWidth / 1.5,
+          width: rootWidth / 1.5 + w + cellOffset * 2,
           height: rootHeight / 1.5,
           quality
         });
@@ -212,7 +212,6 @@ export function getVideoLayout_1(rootWidth: number, rootHeight: number, count: n
           quality
         });
       }
-
       console.log('cellDimensions', cellDimensions);
     }
   }

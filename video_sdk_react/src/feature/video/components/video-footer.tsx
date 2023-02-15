@@ -32,6 +32,7 @@ import { TranscriptionSubtitle } from './transcription-subtitle';
 import { current } from 'immer';
 import IsoRecordingModal from './recording-ask-modal';
 import { KeyOutlined } from '@ant-design/icons';
+import { useStore } from '../../../store/store';
 
 interface VideoFooterProps {
   className?: string;
@@ -64,6 +65,20 @@ const VideoFooter = (props: VideoFooterProps) => {
   const [isComputerAudioDisabled, setIsComputerAudioDisabled] = useState(false);
   const [sharePrivilege, setSharePrivileg] = useState(SharePrivilege.Unlocked);
   const [caption, setCaption] = useState({ userId: '', text: '', isOver: false }); // test
+
+  const { videoLayoutBtn, videoLayoutBtnHandler } = useStore();
+  const btnClickHandler = useCallback(
+    (e) => {
+      videoLayoutBtnHandler(Number(e.target.value));
+    },
+    [videoLayoutBtnHandler]
+  );
+
+  useEffect(() => {
+    videoLayoutBtn === 0 && console.log('비디오 레이아웃: 격자');
+    videoLayoutBtn === 1 && console.log('비디오 레이아웃: 일자');
+    videoLayoutBtn === 2 && console.log('비디오 레이아웃: ㄱ자');
+  }, [videoLayoutBtn]);
 
   const { mediaStream } = useContext(ZoomMediaContext);
   const liveTranscriptionClient = useContext(LiveTranscriptionContext);
@@ -504,6 +519,15 @@ const VideoFooter = (props: VideoFooterProps) => {
           }}
         />
       )}
+      <button value="0" onClick={btnClickHandler}>
+        격자
+      </button>
+      <button value="1" onClick={btnClickHandler}>
+        일자
+      </button>
+      <button value="2" onClick={btnClickHandler}>
+        ㄱ자
+      </button>
     </div>
   );
 };

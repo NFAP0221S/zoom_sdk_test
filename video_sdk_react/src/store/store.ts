@@ -17,7 +17,7 @@ interface Store {
   toggleHandler: (isToggle: boolean) => void;
 
   videoLayoutBtn: number;
-  videoLayoutBtnHandler: () => void;
+  videoLayoutBtnHandler: (number: number) => void;
 }
 
 export const useStore = create<Store>((set) => ({
@@ -38,6 +38,5 @@ export const useStore = create<Store>((set) => ({
   toggleHandler: () => set((state) => ({ isToggle: !state.isToggle })),
 
   videoLayoutBtn: 0,
-  videoLayoutBtnHandler: () =>
-    set((state) => ({ videoLayoutBtn: state.videoLayoutBtn !== 2 ? state.videoLayoutBtn + 1 : 0 }))
+  videoLayoutBtnHandler: (number) => set(() => ({ videoLayoutBtn: number }))
 }));

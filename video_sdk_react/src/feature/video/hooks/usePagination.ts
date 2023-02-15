@@ -11,6 +11,8 @@ export function usePagination(zmClient: ZoomClient, dimension: Dimension) {
   const [totalSize, setTotalSize] = useState(0);
   if (videoLayoutBtn === 1) {
     MAX_NUMBER_PER_PAGE = 6;
+  } else {
+    MAX_NUMBER_PER_PAGE = 25;
   }
   const [pageSize, setPageSize] = useState(MAX_NUMBER_PER_PAGE);
   useEffect(() => {

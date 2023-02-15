@@ -25,14 +25,14 @@ import { useStore } from '../../store/store';
 
 const VideoContainer: React.FunctionComponent<RouteComponentProps> = (props) => {
   // test
-  const { videoLayoutBtn, videoLayoutBtnHandler } = useStore();
+  // const { videoLayoutBtn, videoLayoutBtnHandler } = useStore();
 
-  const btnClickHandler = () => {
-    videoLayoutBtnHandler();
-  };
-  useEffect(() => {
-    console.log('videoLayoutBtn:', videoLayoutBtn);
-  }, [videoLayoutBtn]);
+  // const btnClickHandler = () => {
+  //   videoLayoutBtnHandler();
+  // };
+  // useEffect(() => {
+  //   console.log('videoLayoutBtn:', videoLayoutBtn);
+  // }, [videoLayoutBtn]);
   // test end
 
   const zmClient = useContext(ZoomContext);
@@ -154,13 +154,6 @@ const VideoContainer: React.FunctionComponent<RouteComponentProps> = (props) => 
 
   return (
     <div className="viewport">
-      <div className="viewport-header">
-        <button className="header-btn" onClick={btnClickHandler}>
-          {videoLayoutBtn === 0 && '격자'}
-          {videoLayoutBtn === 1 && '일자'}
-          {videoLayoutBtn === 2 && 'ㄱ자'}
-        </button>
-      </div>
       <div
         className={classnames('share-container', {
           'in-sharing': isSharing
