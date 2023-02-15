@@ -21,12 +21,23 @@ const layoutCandidates: { [key: number]: Grid[] } = Array.from({ length: 25 })
         const column = Math.ceil(count / row);
         if (row < column) {
           return [
-            { row, column },
-            { row: column, column: row }
+            {
+              row,
+              column
+            },
+            {
+              row: column,
+              column: row
+            }
           ];
         }
         if (row === column) {
-          return [{ row, column }];
+          return [
+            {
+              row,
+              column
+            }
+          ];
         }
         return [];
       })
@@ -35,7 +46,7 @@ const layoutCandidates: { [key: number]: Grid[] } = Array.from({ length: 25 })
   })
   .reduce((prev, curr) => ({ ...prev, [curr.count]: curr.candidates }), {});
 
-const aspectRatio = 16 / 10;
+const aspectRatio = 16 / 9;
 const minCellWidth = 256;
 
 const minCellHeight = minCellWidth / aspectRatio;
@@ -43,8 +54,10 @@ const cellOffset = 5;
 const maxCount = 25;
 
 const maxRowsColumns = (width: number, height: number) => ({
-  maxColumns: Math.max(1, Math.floor(width / (minCellWidth + cellOffset * 2))),
-  maxRows: Math.max(1, Math.floor(height / (minCellHeight + cellOffset * 2)))
+  // maxColumns: Math.max(1, Math.floor(width / (minCellWidth + cellOffset * 2))),
+  // maxRows: Math.max(1, Math.floor(height / (minCellHeight + cellOffset * 2)))
+  maxColumns: 5,
+  maxRows: 5
 });
 export function maxViewportVideoCounts(width: number, height: number) {
   const { maxRows, maxColumns } = maxRowsColumns(width, height);
@@ -70,7 +83,7 @@ export function getVideoLayout_0(rootWidth: number, rootHeight: number, count: n
       const { column, row } = item;
       const canonical = Math.floor(Math.min(rootWidth / (16 * column), rootHeight / (9 * row)));
       const cellWidth = canonical * 16 - cellOffset * 2;
-      const cellHeight = canonical * 10 - cellOffset * 2;
+      const cellHeight = canonical * 9 - cellOffset * 2;
       return {
         cellWidth,
         cellHeight,

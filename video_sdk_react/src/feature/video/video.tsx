@@ -24,17 +24,6 @@ import { useNetworkQuality } from './hooks/useNetworkQuality';
 import { useStore } from '../../store/store';
 
 const VideoContainer: React.FunctionComponent<RouteComponentProps> = (props) => {
-  // test
-  // const { videoLayoutBtn, videoLayoutBtnHandler } = useStore();
-
-  // const btnClickHandler = () => {
-  //   videoLayoutBtnHandler();
-  // };
-  // useEffect(() => {
-  //   console.log('videoLayoutBtn:', videoLayoutBtn);
-  // }, [videoLayoutBtn]);
-  // test end
-
   const zmClient = useContext(ZoomContext);
   const {
     mediaStream,
@@ -199,7 +188,9 @@ const VideoContainer: React.FunctionComponent<RouteComponentProps> = (props) => 
             // const dimension = videoLayout[index];
             const dimension = videoLayout[index];
             const { width, height, x, y } = dimension;
+            console.log('dimension:', dimension);
             const { height: canvasHeight } = canvasDimension;
+            console.log('canvasHeight:', canvasHeight);
             return (
               <Avatar
                 participant={user}
