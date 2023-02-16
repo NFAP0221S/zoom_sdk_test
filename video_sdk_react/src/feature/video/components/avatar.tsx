@@ -10,7 +10,9 @@ import ZoomContext from '../../../context/zoom-context';
 import { useHover } from '../../../hooks';
 import type { AdvancedFeatureSwitch } from '../video-types';
 import { getAntdDropdownMenu, getAntdItem } from './video-footer-utils';
+import { useStore } from '../../../store/store';
 interface AvatarProps {
+  id: number;
   participant: Participant;
   style?: { [key: string]: string };
   isActive: boolean;
@@ -25,6 +27,7 @@ interface AvatarProps {
 const networkQualityIcons = ['bad', 'bad', 'normal', 'good', 'good', 'good'];
 const Avatar = (props: AvatarProps) => {
   const {
+    id,
     participant,
     style,
     isActive,
@@ -36,6 +39,7 @@ const Avatar = (props: AvatarProps) => {
     setLocalVolume,
     onAdvancedFeatureToggle
   } = props;
+  const { videoLayoutBtn, setClickedAvatar, clickToggle, setClcickToggle } = useStore();
   const [isDropdownVisible, setIsDropdownVisbile] = useState(false);
   const { displayName, audio, muted, bVideoOn, userId } = participant;
   const avatarRef = useRef(null);
@@ -60,11 +64,21 @@ const Avatar = (props: AvatarProps) => {
     onAdvancedFeatureToggle?.(userId, key);
     setIsDropdownVisbile(false);
   };
+
+  const onAvatarClick = () => {
+    if (videoLayoutBtn === 1) {
+      console.log('id', id);
+      setClickedAvatar(id);
+      setClcickToggle(true);
+    }
+  };
+
   return (
     <div
       className={classNames('avatar', { 'avatar-active': isActive }, className)}
       style={{ ...style, background: bVideoOn ? 'transparent' : 'rgb(26,26,26)' }}
       ref={avatarRef}
+      onClick={onAvatarClick}
     >
       {(bVideoOn || (audio === 'computer' && muted)) && (
         <div className="corner-name">

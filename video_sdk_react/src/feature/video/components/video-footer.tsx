@@ -93,9 +93,11 @@ const VideoFooter = (props: VideoFooterProps) => {
       await mediaStream?.stopVideo();
       setIsStartedVideo(false);
     } else {
+      // 화면에 자신의 비디오를 렌더링할 수 있는지 확인
       if (mediaStream?.isRenderSelfViewWithVideoElement()) {
         const videoElement = document.querySelector(`#${SELF_VIDEO_ID}`) as HTMLVideoElement;
         if (videoElement) {
+          // videoElement를 매개변수로 받아 비디오 시작
           await mediaStream?.startVideo({ videoElement });
         }
       } else {
@@ -103,7 +105,10 @@ const VideoFooter = (props: VideoFooterProps) => {
         if (mediaStream?.isSupportVirtualBackground() && isBlur) {
           Object.assign(startVideoOptions, { virtualBackground: { imageUrl: 'blur' } });
         }
+        // isRenderSelfViewWithVideoElement 가 false인 경우
+        // startVideoOptions 을 매개변수로 받아 비디오 시작
         await mediaStream?.startVideo(startVideoOptions);
+        // 멀티 비디오 지원하지 않는 경우
         if (!mediaStream?.isSupportMultipleVideos()) {
           const canvasElement = document.querySelector(`#${SELF_VIDEO_ID}`) as HTMLCanvasElement;
           mediaStream?.renderVideo(canvasElement, zmClient.getSessionInfo().userId, 254, 143, 0, 0, 3);

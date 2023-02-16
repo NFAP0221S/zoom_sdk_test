@@ -28,7 +28,7 @@ export function useGalleryLayout(
   if (page === totalPage - 1) {
     size = Math.min(size, totalSize % pageSize || size);
   }
-  const { videoLayoutBtn } = useStore();
+  const { videoLayoutBtn, clickedAvatar, clickToggle, setClcickToggle } = useStore();
   useEffect(() => {
     if (videoLayoutBtn === 0) {
       setLayout(getVideoLayout_0(dimension.width, dimension.height, size));
@@ -45,9 +45,33 @@ export function useGalleryLayout(
     if (layout) console.log('useGalleryLayout layout', layout);
   }, [layout]);
 
+  useEffect(() => {
+    if (clickToggle) {
+      let newArr = visibleParticipants;
+      console.log('newArr:', newArr);
+      // 클릭된 index(id)
+      console.log('clickedAvatar:', clickedAvatar);
+      // 유저 배열에서, 클릭된 인덱스 원소만 추출
+      const clickedId = visibleParticipants[Number(clickedAvatar)];
+      console.log('clickedId:', clickedId);
+      const mainAvatar = newArr.splice(Number(clickedAvatar), 1);
+      console.log('newArr:', newArr);
+      console.log('mainAvatar:', mainAvatar);
+      /**
+       * 임시로 displayName 으로 정렬함. (유저 네임을 인덱스 번호로 지정하여 테스트)
+       * visibleParticipants 에 key or userId 값을 추가 후, 추가 한 값으로 정렬하는 방향으로..
+       */
+      const sortNewArr = newArr.sort((user1, user2) => Number(user1.displayName) - Number(user2.displayName));
+      newArr = [...mainAvatar, ...sortNewArr];
+      setVisibleParticipants(newArr);
+      setClcickToggle(false);
+    }
+  }, [clickToggle, clickedAvatar]);
+
   const onParticipantsChange = useCallback(
     (participants: Participant[]) => {
       const currentUser = zmClient.getCurrentUserInfo();
+      // 현재 세션에 참가한 유저의 수가 0보다 많을 때
       if (currentUser && participants.length > 0) {
         let pageParticipants: Participant[] = [];
         pageParticipants = participants;
@@ -57,8 +81,7 @@ export function useGalleryLayout(
           pageParticipants = participants
             .filter((user) => user.userId !== currentUser.userId)
             .sort((user1, user2) => Number(user2.bVideoOn) - Number(user1.bVideoOn));
-          // pageParticipants.splice(1, 0, currentUser);
-          pageParticipants.splice(0, 0, currentUser);
+          pageParticipants.splice(1, 0, currentUser);
           pageParticipants = pageParticipants.filter((_user, index) => Math.floor(index / pageSize) === page);
         }
         console.log('onParticipantsChange pageParticipants', pageParticipants);

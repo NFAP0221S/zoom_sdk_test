@@ -161,6 +161,7 @@ const VideoContainer: React.FunctionComponent<RouteComponentProps> = (props) => 
             const { height: canvasHeight } = canvasDimension;
             return (
               <Avatar
+                id={index}
                 participant={user}
                 key={user.userId}
                 isActive={activeVideo === user.userId}

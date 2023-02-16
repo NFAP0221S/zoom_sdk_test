@@ -180,6 +180,7 @@ const VideoContainer: React.FunctionComponent<RouteComponentProps> = (props) => 
         )}
         {activeUser && (
           <Avatar
+            id={0}
             participant={activeUser}
             isActive={false}
             className="single-view-avatar"
