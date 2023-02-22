@@ -66,7 +66,7 @@ const Avatar = (props: AvatarProps) => {
   };
 
   const onAvatarClick = () => {
-    if (videoLayoutBtn === 1) {
+    if (videoLayoutBtn === 1 && id !== 0) {
       console.log('id', id);
       setClickedAvatar(id);
       setClcickToggle(true);

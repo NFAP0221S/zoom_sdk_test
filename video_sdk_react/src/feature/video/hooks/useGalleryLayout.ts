@@ -20,6 +20,11 @@ export function useGalleryLayout(
   dimension: Dimension,
   pagination: Pagination
 ) {
+  /**
+   * TODO: 2차원 배열등을 사용해서 페이지당 들어가는 리소스들을 분리
+   * 1 페이지 일때: 배열의 0번째 요소들을 map
+   * 2 페이지 일때: 배열의 1번째 요소들을 map
+   */
   const [visibleParticipants, setVisibleParticipants] = useState<Participant[]>([]);
   const [layout, setLayout] = useState<CellLayout[]>([]);
   const [subscribedVideos, setSubscribedVideos] = useState<number[]>([]);
@@ -66,7 +71,7 @@ export function useGalleryLayout(
       setVisibleParticipants(newArr);
       setClcickToggle(false);
     }
-  }, [clickToggle, clickedAvatar]);
+  }, [clickToggle, clickedAvatar, visibleParticipants]);
 
   const onParticipantsChange = useCallback(
     (participants: Participant[]) => {

@@ -12,7 +12,7 @@ interface Layout {
   row: number;
 }
 
-const layoutCandidates: { [key: number]: Grid[] } = Array.from({ length: 6 })
+const layoutCandidates: { [key: number]: Grid[] } = Array.from({ length: 25 })
   .map((value, index) => {
     const count = index + 1;
     const mid = Math.ceil(count / 2);

@@ -9,6 +9,8 @@ export function usePagination(zmClient: ZoomClient, dimension: Dimension) {
   const { videoLayoutBtn } = useStore();
   const [page, setPage] = useState(0);
   const [totalSize, setTotalSize] = useState(0);
+
+  // const MAX_NUMBER_PER_PAGE = 25;
   if (videoLayoutBtn === 1) {
     MAX_NUMBER_PER_PAGE = 6;
   } else {
@@ -16,8 +18,6 @@ export function usePagination(zmClient: ZoomClient, dimension: Dimension) {
   }
   const [pageSize, setPageSize] = useState(MAX_NUMBER_PER_PAGE);
   useEffect(() => {
-    console.log('dimension.width', dimension.width);
-    console.log('dimension.height', dimension.height);
     const size = Math.min(MAX_NUMBER_PER_PAGE, maxViewportVideoCounts(dimension.width, dimension.height));
     setPageSize(size);
   }, [dimension]);
@@ -38,10 +38,6 @@ export function usePagination(zmClient: ZoomClient, dimension: Dimension) {
     setTotalSize(zmClient.getAllUser().length);
   });
 
-  // test
-  useEffect(() => {
-    console.log('usePagination page', page);
-  }, [page]);
   return {
     page,
     totalPage: Math.ceil(totalSize / pageSize),
