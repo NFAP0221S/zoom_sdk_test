@@ -249,7 +249,7 @@ function App(props: AppProps) {
       if (status === 'closed') {
         console.log('onLeaveOrJoinSession: status === closed');
         try {
-          const newSigature = generateVideoToken(
+          const newSignature = generateVideoToken(
             sdkKey,
             sdkSecret,
             isTopic,
@@ -260,7 +260,8 @@ function App(props: AppProps) {
           );
           setLoadingText('Joining the session...');
           setIsLoading(true);
-          await zmClient.join(isTopic, newSigature, isName, isPassword);
+          console.log('시그니처', newSignature);
+          await zmClient.join(isTopic, newSignature, isName, isPassword);
           setIsLoading(false);
           const stream = zmClient.getMediaStream();
           setMediaStream(stream);
