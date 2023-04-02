@@ -68,13 +68,18 @@ const Home: React.FunctionComponent<HomeProps> = (props) => {
     (e) => {
       const currentName = e.target.name;
       let currentValue = e.target.value;
-      if (currentValue === '강사') currentValue = 1;
-      if (currentValue === '학생') currentValue = 0;
+      if (currentValue === 'instructor') currentValue = 1;
+      if (currentValue === 'student') currentValue = 0;
       console.log('e.target.value', currentValue);
       setJoinData({ ...joinData, [currentName]: currentValue });
+      // setJoinData(currentName, currentValue);
     },
     [joinData]
   );
+
+  useEffect(() => {
+    console.log('ef', joinData);
+  }, [joinData]);
 
   return (
     <div>
@@ -120,38 +125,40 @@ const Home: React.FunctionComponent<HomeProps> = (props) => {
         </div>
       ) : (
         <div className="container-entrance">
-          <div>
-            <input
-              type="radio"
-              id="tokenButton"
-              name="buttonType"
-              value="token"
-              checked={selectedButton === 'token'}
-              onChange={(e) => setSelectedButton(e.target.value)}
-            />
-            <label htmlFor="tokenButton">토큰</label>
-          </div>
-          <div>
-            <input
-              type="radio"
-              id="sdkButton"
-              name="buttonType"
-              value="sdk"
-              checked={selectedButton === 'sdk'}
-              onChange={(e) => setSelectedButton(e.target.value)}
-            />
-            <label htmlFor="sdkButton">SDK</label>
+          <div className="radio-button">
+            <div>
+              <input
+                type="radio"
+                id="tokenButton"
+                name="buttonType"
+                value="token"
+                checked={selectedButton === 'token'}
+                onChange={(e) => setSelectedButton(e.target.value)}
+              />
+              <label htmlFor="tokenButton">토큰</label>
+            </div>
+            <div>
+              <input
+                type="radio"
+                id="sdkButton"
+                name="buttonType"
+                value="sdk"
+                checked={selectedButton === 'sdk'}
+                onChange={(e) => setSelectedButton(e.target.value)}
+              />
+              <label htmlFor="sdkButton">SDK</label>
+            </div>
           </div>
           <form action="#">
             {selectedButton === 'sdk' && (
               <>
                 <div className="row">
                   <label htmlFor="input-key">SDK Key</label>
-                  <input type="text" id="input-key" name="sdk-key" onChange={(e) => joinDataOnChange(e)} />
+                  <input type="text" id="input-key" name="sdkKey" onChange={(e) => joinDataOnChange(e)} />
                 </div>
                 <div className="row">
                   <label htmlFor="input-secret">SDK Secret</label>
-                  <input type="text" id="input-secret" name="sdk-secret" onChange={(e) => joinDataOnChange(e)} />
+                  <input type="text" id="input-secret" name="sdkSecret" onChange={(e) => joinDataOnChange(e)} />
                 </div>
               </>
             )}

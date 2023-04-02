@@ -288,22 +288,42 @@ function App(props: AppProps) {
 
   const onLeaveOrJoinSession = useCallback(
     async (joinData: any) => {
+      console.log('joinData', joinData);
       if (status === 'closed') {
         try {
-          newSignature = generateVideoToken(
-            sdkKey,
-            sdkSecret,
-            joinData.topic,
-            joinData.password,
-            userIdentity,
-            sessionKey,
-            parseInt(joinData.role, 10)
-          );
+          // newSignature = generateVideoToken(
+          //   sdkKey,
+          //   sdkSecret,
+          //   joinData.topic,
+          //   joinData.password,
+          //   userIdentity,
+          //   sessionKey,
+          //   parseInt(joinData.role, 10)
+          // );
           setLoadingText('Joining the session...');
           setIsLoading(true);
-          const tk = joinData.token;
-          // await zmClient.join(joinData.topic, newSignature, joinData.name, joinData.password);
-          await zmClient.join(joinData.topic, joinData.token, joinData.name, joinData.password);
+          if (joinData.token !== '') {
+            // console.log('토큰');
+            // console.log('tk', joinData.token);
+            // console.log('key', joinData.sdkKey);
+            // console.log('scr', joinData.sdkSecret);
+            await zmClient.join(joinData.topic, joinData.token, joinData.name, joinData.password);
+          } else {
+            // console.log('시그니처');
+            // console.log('tk', joinData.token);
+            // console.log('key', joinData.sdkKey);
+            // console.log('scr', joinData.sdkSecret);
+            newSignature = generateVideoToken(
+              joinData.sdkKey,
+              joinData.sdkSecret,
+              joinData.topic,
+              joinData.password,
+              userIdentity,
+              sessionKey,
+              parseInt(joinData.role, 10)
+            );
+            await zmClient.join(joinData.topic, newSignature, joinData.name, joinData.password);
+          }
           setIsLoading(false);
           const stream = zmClient.getMediaStream();
           setMediaStream(stream);

@@ -56,3 +56,13 @@ li {
   cursor: pointer;
   text-transform: uppercase;
 }
+
+.radio-button {
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.radio-button div {
+  margin-right: 15px;
+}
