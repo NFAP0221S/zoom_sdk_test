@@ -301,6 +301,7 @@ function App(props: AppProps) {
           );
           setLoadingText('Joining the session...');
           setIsLoading(true);
+          const tk = joinData.token;
           // await zmClient.join(joinData.topic, newSignature, joinData.name, joinData.password);
           await zmClient.join(joinData.topic, joinData.token, joinData.name, joinData.password);
           setIsLoading(false);

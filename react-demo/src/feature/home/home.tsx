@@ -12,7 +12,10 @@ interface HomeProps extends RouteComponentProps {
 }
 const Home: React.FunctionComponent<HomeProps> = (props) => {
   const { history, status, onLeaveOrJoinSession } = props;
+  const [selectedButton, setSelectedButton] = useState('token');
   const [joinData, setJoinData] = useState({
+    sdkKey: '',
+    sdkSecret: '',
     topic: '',
     name: '',
     password: '',
@@ -117,7 +120,47 @@ const Home: React.FunctionComponent<HomeProps> = (props) => {
         </div>
       ) : (
         <div className="container-entrance">
+          <div>
+            <input
+              type="radio"
+              id="tokenButton"
+              name="buttonType"
+              value="token"
+              checked={selectedButton === 'token'}
+              onChange={(e) => setSelectedButton(e.target.value)}
+            />
+            <label htmlFor="tokenButton">토큰</label>
+          </div>
+          <div>
+            <input
+              type="radio"
+              id="sdkButton"
+              name="buttonType"
+              value="sdk"
+              checked={selectedButton === 'sdk'}
+              onChange={(e) => setSelectedButton(e.target.value)}
+            />
+            <label htmlFor="sdkButton">SDK</label>
+          </div>
           <form action="#">
+            {selectedButton === 'sdk' && (
+              <>
+                <div className="row">
+                  <label htmlFor="input-key">SDK Key</label>
+                  <input type="text" id="input-key" name="sdk-key" onChange={(e) => joinDataOnChange(e)} />
+                </div>
+                <div className="row">
+                  <label htmlFor="input-secret">SDK Secret</label>
+                  <input type="text" id="input-secret" name="sdk-secret" onChange={(e) => joinDataOnChange(e)} />
+                </div>
+              </>
+            )}
+            {selectedButton === 'token' && (
+              <div className="row">
+                <label htmlFor="input-token">토큰</label>
+                <input type="text" id="input-token" name="token" onChange={(e) => joinDataOnChange(e)} />
+              </div>
+            )}
             <div className="row">
               <label htmlFor="input-title">방 제목</label>
               <input type="text" id="input-title" name="topic" onChange={(e) => joinDataOnChange(e)} />
@@ -130,10 +173,7 @@ const Home: React.FunctionComponent<HomeProps> = (props) => {
               <label htmlFor="input-password">비밀번호</label>
               <input type="password" id="input-password" name="password" onChange={(e) => joinDataOnChange(e)} />
             </div>
-            <div className="row">
-              <label htmlFor="input-token">토큰</label>
-              <input type="text" id="input-token" name="token" onChange={(e) => joinDataOnChange(e)} />
-            </div>
+
             <div className="row">
               <label htmlFor="dropdown-user-type">구분</label>
               <select id="dropdown-user-type" name="role" onChange={(e) => joinDataOnChange(e)}>
